@@ -1,5 +1,5 @@
-import { WeekDay } from '@angular/common';
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 interface Coupon {
   number: string
   series: string
@@ -14,33 +14,48 @@ interface Coupon {
 
 export class AppComponent {
 
+  started = false;
+  speed: number = 1;
+  repeater: any;
+  running: boolean = false;
+  playerHasCustomCoupon = false
+
+  customPlayerCoupon!: Coupon;
   winnerCoupon!: Coupon;
   playersCoupon!: Coupon;
 
-  moneySpend!: number;
-  moneyEarned!: number;
-  balance!: number;
-  date!: Date;
+  moneySpend: number = 0;
+  moneyEarned: number = 0;
+  balance: number = 0;
+  date: Date = new Date();
 
   ngOnInit() {
-    this.moneyEarned = this.moneySpend = this.balance = 0
-    this.date = new Date();
-
-    setInterval(() => {
-      if (this.date.getDay() <= 4) {
-        this.NormalCoupon();
-      }
-      else if (this.date.getDay() == 5) {
-        this.FridayCoupon();
-      }
-      else {
-        this.WeekendCoupon();
-      }
-        this.balance = this.moneyEarned - this.moneySpend
-      this.date.setDate(this.date.getDate() + 1)
-    }, 1000);
+    console.log(this.started)
+    this.simulate()
   }
+    
+  private play() {
+    this.started = true
+    this.repeater = setInterval(() => {
+        this.simulate();
+      console.log(this.started)
 
+      }, 1000 / this.speed);
+    }
+
+    private simulate() {
+        if (this.date.getDay() <= 4) {
+            this.NormalCoupon();
+        }
+        else if (this.date.getDay() == 5) {
+            this.FridayCoupon();
+        }
+        else {
+            this.WeekendCoupon();
+        }
+        this.balance = this.moneyEarned - this.moneySpend;
+        this.date.setDate(this.date.getDate() + 1);
+    }
 
   private NormalCoupon() {
     this.moneySpend += 2;
@@ -203,6 +218,31 @@ export class AppComponent {
         return 0;
     }
   }
-  
+
+  moreSpeed() {
+    if (this.speed < 10) {
+      clearInterval(this.repeater)
+      this.speed += 0.25
+      this.play();
+    }
+  }
+
+  lessSpeed() {
+    if (this.speed > 0) {
+      clearInterval(this.repeater)
+      this.speed -= 0.25
+      this.play();
+    }
+  }
+
+  pause() {
+    this.running = false
+    clearInterval(this.repeater)
+  }
+
+  continue() {
+    this.running = true
+    this.play();
+  }
   title = 'OnceSimulation';
 }
