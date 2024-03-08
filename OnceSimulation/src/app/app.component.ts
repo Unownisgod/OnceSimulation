@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { parse } from 'jest-editor-support';
 interface Coupon {
   number: string
   series: string
@@ -30,36 +30,35 @@ export class AppComponent {
   date: Date = new Date();
 
   ngOnInit() {
-    console.log(this.started)
-    this.simulate()
   }
     
   private play() {
     this.started = true
     this.repeater = setInterval(() => {
-        this.simulate();
-      console.log(this.started)
+      this.simulate();
+      console.log(this.playerHasCustomCoupon)
+    }, 1000 / this.speed);
+  }
 
-      }, 1000 / this.speed);
-    }
-
-    private simulate() {
-        if (this.date.getDay() <= 4) {
-            this.NormalCoupon();
-        }
-        else if (this.date.getDay() == 5) {
-            this.FridayCoupon();
-        }
-        else {
-            this.WeekendCoupon();
-        }
-        this.balance = this.moneyEarned - this.moneySpend;
-        this.date.setDate(this.date.getDate() + 1);
-    }
+  private simulate() {
+      if (this.date.getDay() <= 4) {
+          this.NormalCoupon();
+      }
+      else if (this.date.getDay() == 5) {
+          this.FridayCoupon();
+      }
+      else {
+          this.WeekendCoupon();
+      }
+      this.balance = this.moneyEarned - this.moneySpend;
+      this.date.setDate(this.date.getDate() + 1);
+  }
 
   private NormalCoupon() {
     this.moneySpend += 2;
-    this.playersCoupon = this.GenerateNormalCoupon();
+    if (!this.playerHasCustomCoupon) {
+      this.playersCoupon = this.GenerateNormalCoupon();
+    }
     this.winnerCoupon = this.GenerateNormalCoupon();
     var coincidences = this.TestCoupon();
     this.moneyEarned += this.CheckNormalPrizes(coincidences.coincidences, coincidences.seriesCoincides);
@@ -67,7 +66,9 @@ export class AppComponent {
 
   private FridayCoupon() {
     this.moneySpend += 3;
-    this.playersCoupon = this.GenerateFridayCoupon();
+    if (!this.playerHasCustomCoupon) {
+      this.playersCoupon = this.GenerateFridayCoupon();
+    }
     this.winnerCoupon = this.GenerateFridayCoupon();
     var coincidences = this.TestCoupon();
     this.moneyEarned += this.CheckFridayPrizes(coincidences.coincidences, coincidences.seriesCoincides);
@@ -75,7 +76,9 @@ export class AppComponent {
 
   private WeekendCoupon() {
     this.moneySpend += 2;
-    this.playersCoupon = this.GenerateWeekendCoupon();
+    if (!this.playerHasCustomCoupon) {
+      this.playersCoupon = this.GenerateWeekendCoupon();
+    }
     this.winnerCoupon = this.GenerateWeekendCoupon();
     var coincidences = this.TestCoupon();
     this.moneyEarned += this.CheckWeekendPrizes(coincidences.coincidences, coincidences.seriesCoincides)
@@ -223,15 +226,19 @@ export class AppComponent {
     if (this.speed < 10) {
       clearInterval(this.repeater)
       this.speed += 0.25
-      this.play();
+      if (this.started) {
+        this.play();
+      }
     }
   }
 
   lessSpeed() {
-    if (this.speed > 0) {
+    if (this.speed > 0.5) {
       clearInterval(this.repeater)
       this.speed -= 0.25
-      this.play();
+      if (this.started) {
+        this.play();
+      }
     }
   }
 
@@ -243,6 +250,36 @@ export class AppComponent {
   continue() {
     this.running = true
     this.play();
+  }
+
+  updatePlayersCoupon() {
+    this.playersCoupon.number = (document.getElementById("playersNumber") as HTMLInputElement).value
+    if (this.playersCoupon.number.length < 5) {
+      while (this.playersCoupon.number.length < 5) {
+        this.playersCoupon.number = "0" + this.playersCoupon.number
+      }
+    }
+    else if (this.playersCoupon.number.length > 5) {
+      this.playersCoupon.number = this.playersCoupon.number.substring(0,5)
+    }
+    this.playersCoupon.series = (document.getElementById("playersSeries") as HTMLInputElement).value
+
+    if (this.playersCoupon.series.length < 3) {
+      while (this.playersCoupon.series.length < 3) {
+        this.playersCoupon.series = "0" + this.playersCoupon.series
+      }
+    }
+    else if (this.playersCoupon.series.length > 3) {
+      this.playersCoupon.series = this.playersCoupon.series.substring(0, 3)
+    }
+    if (this.date.getDay() != 5 && Number.parseInt(this.playersCoupon.series) > 55) {
+      this.playersCoupon.series = "55"
+    }
+    else if (this.date.getDay() == 5 && Number.parseInt(this.playersCoupon.series) > 135) {
+      this.playersCoupon.series = "135"
+    }
+
+    console.log(this.playersCoupon)
   }
   title = 'OnceSimulation';
 }
