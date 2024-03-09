@@ -28,11 +28,9 @@ export class AppComponent {
   moneyEarned: number = 0;
   balance: number = 0;
   date: Date = new Date();
-
-  ngOnInit() {
-  }
     
   private play() {
+    this.simulate();
     this.started = true
     this.repeater = setInterval(() => {
       this.simulate();
