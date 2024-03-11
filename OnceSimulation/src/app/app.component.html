@@ -8,6 +8,8 @@
   </style>
 </head>
 <body>
+  <div class="container">
+
   <h1 class="d-flex justify-content-center">Once Simulation</h1>
 
   <div class="row d-flex justify-content-center mt-5">
@@ -15,29 +17,23 @@
       <p class="text-center fw-bold">
         number
       </p>
-      <div class="card shadow-lg border-0 fw-bolder fs-2 d-flex justify-content-center text-center" *ngIf="started">
+      <div class="card shadow-lg border-0 fw-bolder fs-2 d-flex justify-content-center text-center">
         &nbsp; {{winnerCoupon.number}} &nbsp;
       </div>
-      <div class="card shadow-lg border-0 fw-bolder fs-2 d-flex justify-content-center text-center" *ngIf="!started">
-        &nbsp; 00000 &nbsp;
+      </div>
+      <div class="col-auto p-3">
+        <p class="text-center fw-bold">
+          series
+        </p>
+        <div class="card shadow-lg border-0 fw-bolder fs-2 d-flex justify-content-center text-center">
+          &nbsp; {{winnerCoupon.series}} &nbsp;
+        </div>
       </div>
     </div>
-    <div class="col-auto p-3">
-      <p class="text-center fw-bold">
-        series
-      </p>
-      <div class="card shadow-lg border-0 fw-bolder fs-2 d-flex justify-content-center text-center" *ngIf="started">
-        &nbsp; {{winnerCoupon.series}} &nbsp;
-      </div>
-      <div class="card shadow-lg border-0 fw-bolder fs-2 d-flex justify-content-center text-center" *ngIf="!started">
-        &nbsp; 000 &nbsp;
-      </div>
-    </div>
-  </div>
 
 <!--Calendar-->
   <div class="row d-flex justify-content-center mt-5">
-    <div class="col-sm-1 col-3" >
+    <div class="col-lg-1 col-sm-2 col-3" >
       <div class="shadow-lg card bg-success text-white" *ngIf="started;">
         {{moneyEarned}}
       </div>
@@ -45,22 +41,22 @@
         0
       </div>
     </div>
-    <div class="col-sm-1 col-3" *ngIf="started">
+    <div class="col-lg-1 col-sm-2 col-3" *ngIf="started">
       <div class="shadow-lg card bg-light text-black">
         {{balance}}
       </div>
     </div>
-    <div class="col-sm-1 col-3" *ngIf="!started">
+    <div class="col-lg-1 col-sm-2 col-3" *ngIf="!started">
       <div class="shadow-lg card bg-light text-black">
         0
       </div>
     </div>
-    <div class="col-sm-1 col-3" *ngIf="started">
+    <div class="col-lg-1 col-sm-2 col-3" *ngIf="started">
       <div class="shadow-lg card bg-danger text-white">
         {{moneySpend}}
       </div>
     </div>
-    <div class="col-sm-1 col-3" *ngIf="!started">
+    <div class="col-lg-1 col-sm-2 col-3" *ngIf="!started">
       <div class="shadow-lg card bg-danger text-white">
         0
       </div>
@@ -81,13 +77,10 @@
         number
       </p>
       <div class="card shadow-lg border-0 fw-bolder fs-2 d-flex justify-content-center text-center" *ngIf="playerHasCustomCoupon">
-        <input type="number" min="0" max="99999" class="rounded border-0 text-center fw-bold" value="{{playersCoupon.number}}" style="width: 127px; height: 48px;" id="playersNumber" (change)="updatePlayersCoupon()"/>
+        <input type="number" min="0" max="99999" class="rounded border-0 text-center fw-bold" [(ngModel)]="playersCoupon.number" style="width: 127px; height: 48px;" id="playersNumber" (change)="updatePlayersCoupon()"/>
       </div>
-      <div class="card shadow-lg border-0 fw-bolder fs-2 d-flex justify-content-center text-center" *ngIf="started && !playerHasCustomCoupon">
+      <div class="card shadow-lg border-0 fw-bolder fs-2 d-flex justify-content-center text-center" *ngIf="!playerHasCustomCoupon">
         &nbsp; {{playersCoupon.number}} &nbsp;
-      </div>
-      <div class="card shadow-lg border-0 fw-bolder fs-2 d-flex justify-content-center text-center" *ngIf="!started && !playerHasCustomCoupon">
-        &nbsp; 00000 &nbsp;
       </div>
     </div>
     <div class="col-auto p-3">
@@ -95,19 +88,16 @@
         series
       </p>
       <div class="card shadow-lg border-0 fw-bolder fs-2 d-flex justify-content-center text-center" *ngIf="playerHasCustomCoupon">
-        <input type="number" min="0" max="55" class="rounded border-0 text-center fw-bold" value="{{playersCoupon.series}}" style="width: 91px; height: 48px;" id="playersSeries"  (change)="updatePlayersCoupon()" />
+        <input type="number" min="0" max="55" class="rounded border-0 text-center fw-bold" [(ngModel)]="playersCoupon.series" style="width: 91px; height: 48px;" id="playersSeries"  (change)="updatePlayersCoupon()" />
       </div>
-      <div class="card shadow-lg border-0 fw-bolder fs-2 d-flex justify-content-center text-center" *ngIf="started && !playerHasCustomCoupon">
+      <div class="card shadow-lg border-0 fw-bolder fs-2 d-flex justify-content-center text-center" *ngIf="!playerHasCustomCoupon">
         &nbsp; {{playersCoupon.series}} &nbsp;
-      </div>
-      <div class="card shadow-lg border-0 fw-bolder fs-2 d-flex justify-content-center text-center" *ngIf="!started && !playerHasCustomCoupon">
-        &nbsp; 000 &nbsp;
       </div>
     </div>
   </div>
 
-  <div class="row justify-content-center align-content-center  pt-5">
-    <div class="col-4 col-sm-2">
+  <div class="row justify-content-center align-content-center pt-5">
+    <div class="col-6 col-sm-4 col-lg-2">
       <div class="btn-group d-flex" style="height: 40px;">
         <button class="btn btn-primary" (click)="lessSpeed()">
           -
@@ -129,6 +119,7 @@
     </div>
   </div>
 
+  </div>
 </body>
 </html>
 

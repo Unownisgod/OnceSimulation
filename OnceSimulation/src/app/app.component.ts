@@ -21,8 +21,8 @@ export class AppComponent {
   playerHasCustomCoupon = false
 
   customPlayerCoupon!: Coupon;
-  winnerCoupon!: Coupon;
-  playersCoupon!: Coupon;
+  winnerCoupon: Coupon = { number: "00000", series: "000" };
+  playersCoupon: Coupon = { number: "00000", series: "000" };
 
   moneySpend: number = 0;
   moneyEarned: number = 0;
@@ -34,7 +34,6 @@ export class AppComponent {
     this.started = true
     this.repeater = setInterval(() => {
       this.simulate();
-      console.log(this.playerHasCustomCoupon)
     }, 1000 / this.speed);
   }
 
@@ -276,8 +275,6 @@ export class AppComponent {
     else if (this.date.getDay() == 5 && Number.parseInt(this.playersCoupon.series) > 135) {
       this.playersCoupon.series = "135"
     }
-
-    console.log(this.playersCoupon)
   }
   title = 'OnceSimulation';
 }
