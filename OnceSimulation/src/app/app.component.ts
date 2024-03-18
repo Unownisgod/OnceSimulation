@@ -4,7 +4,10 @@ interface Coupon {
   number: string
   series: string
 }
-
+interface Log {
+  message: string;
+  level: string;
+}
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -18,7 +21,8 @@ export class AppComponent {
   speed: number = 1;
   repeater: any;
   running: boolean = false;
-  playerHasCustomCoupon = false
+  playerHasCustomCoupon = false;
+  logs: Log[] = [];
 
   customPlayerCoupon!: Coupon;
   winnerCoupon: Coupon = { number: "00000", series: "000" };
@@ -58,7 +62,21 @@ export class AppComponent {
     }
     this.winnerCoupon = this.GenerateNormalCoupon();
     var coincidences = this.TestCoupon();
-    this.moneyEarned += this.CheckNormalPrizes(coincidences.coincidences, coincidences.seriesCoincides);
+    var prize = this.CheckNormalPrizes(coincidences.coincidences, coincidences.seriesCoincides);
+    this.moneyEarned += prize;
+    var weekDay = this.getWeekDay()
+    if (prize > 2) {
+      this.logs.push({
+        message: "[" + weekDay + "] Congratulations! You won " + prize + "€\n", level: "win" })
+    }
+    else if (prize > 0) {
+      this.logs.push({
+        message: "[" + weekDay + "] Phew! You Got your money back, but got no win\n", level: "neutral" })
+    }
+    else {
+      this.logs.push({
+        message: "[" + weekDay + "] You lost 2€. Better luck next time!\n", level: "loss" })
+    }
   }
 
   private FridayCoupon() {
@@ -68,7 +86,24 @@ export class AppComponent {
     }
     this.winnerCoupon = this.GenerateFridayCoupon();
     var coincidences = this.TestCoupon();
-    this.moneyEarned += this.CheckFridayPrizes(coincidences.coincidences, coincidences.seriesCoincides);
+    var prize = this.CheckFridayPrizes(coincidences.coincidences, coincidences.seriesCoincides);
+    this.moneyEarned += prize;
+    var weekDay = this.getWeekDay()
+    if (prize > 3) {
+      this.logs.push({
+        message: "[" + weekDay + "] Congratulations! You won " + prize + "€\n", level: "win"
+      })
+    }
+    else if (prize > 0) {
+      this.logs.push({
+        message: "[" + weekDay + "] Phew! You Got your money back, but got no win\n", level: "neutral"
+      })
+    }
+    else {
+      this.logs.push({
+        message: "[" + weekDay + "] You lost 3€. Better luck next time!\n", level: "loss"
+      })
+    }
   }
 
   private WeekendCoupon() {
@@ -78,7 +113,24 @@ export class AppComponent {
     }
     this.winnerCoupon = this.GenerateWeekendCoupon();
     var coincidences = this.TestCoupon();
-    this.moneyEarned += this.CheckWeekendPrizes(coincidences.coincidences, coincidences.seriesCoincides)
+    var prize = this.CheckWeekendPrizes(coincidences.coincidences, coincidences.seriesCoincides)
+    this.moneyEarned += prize;
+    var weekDay = this.getWeekDay()
+    if (prize > 2) {
+      this.logs.push({
+        message: "[" + weekDay + "] Congratulations! You won " + prize + "€\n", level: "win"
+      })
+    }
+    else if (prize > 0) {
+      this.logs.push({
+        message: "[" + weekDay + "] Phew! You Got your money back, but got no win\n", level: "neutral"
+      })
+    }
+    else {
+      this.logs.push({
+        message: "[" + weekDay + "] You lost 2€. Better luck next time!\n", level: "loss"
+      })
+    }
   }
 
   GenerateNormalCoupon(): Coupon {
@@ -223,7 +275,7 @@ export class AppComponent {
     if (this.speed < 10) {
       clearInterval(this.repeater)
       this.speed += 0.25
-      if (this.started) {
+      if (this.started && this.running) {
         this.play();
       }
     }
@@ -233,7 +285,7 @@ export class AppComponent {
     if (this.speed > 0.5) {
       clearInterval(this.repeater)
       this.speed -= 0.25
-      if (this.started) {
+      if (this.started && this.running) {
         this.play();
       }
     }
@@ -276,5 +328,19 @@ export class AppComponent {
       this.playersCoupon.series = "135"
     }
   }
+
+  getWeekDay() {
+    switch (this.date.getDay()) {
+      case 1: return "Sunday"
+      case 2: return "Monday"
+      case 3: return "Tuesday"
+      case 4: return "Wednesday"
+      case 5: return "Thursday"
+      case 6: return "Friday"
+      case 0: return "Saturday"
+      default: return "Error"
+    }
+  }
+
   title = 'OnceSimulation';
 }
