@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { parse } from 'jest-editor-support';
+import { Title } from "@angular/platform-browser";
 interface Coupon {
   number: string
   series: string
@@ -14,8 +14,10 @@ interface Log {
   styleUrl: './app.component.css'
 })
 
-
 export class AppComponent {
+  constructor(private titleService: Title) {
+    this.titleService.setTitle("Once Coupons Simulation");
+  }
 
   mode = 'light';
   started = false;
