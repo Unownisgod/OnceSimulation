@@ -17,6 +17,7 @@ interface Log {
 
 export class AppComponent {
 
+  mode = 'light';
   started = false;
   speed: number = 1;
   repeater: any;
@@ -331,14 +332,22 @@ export class AppComponent {
 
   getWeekDay() {
     switch (this.date.getDay()) {
-      case 1: return "Sunday"
-      case 2: return "Monday"
-      case 3: return "Tuesday"
-      case 4: return "Wednesday"
-      case 5: return "Thursday"
-      case 6: return "Friday"
-      case 0: return "Saturday"
+      case 1: return "Monday"
+      case 2: return "Tuesday"
+      case 3: return "Wednesday"
+      case 4: return "Thursday"
+      case 5: return "Friday"
+      case 6: return "Saturday"
+      case 0: return "Sunday"
       default: return "Error"
+    }
+  }
+  changeMode() {
+    if (this.mode == "light") {
+      this.mode = "dark"
+    }
+    else {
+      this.mode = "light"
     }
   }
 
