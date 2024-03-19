@@ -18,7 +18,7 @@ This Angular application provides a user-friendly interface to simulate the gene
 2. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/<your-username>/once-coupon-simulator.git
+   git clone https://github.com/Unownisgod/OnceCouponSimulator.git
    ```
 
 3. **Install dependencies:**
