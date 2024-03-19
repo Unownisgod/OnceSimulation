@@ -24,9 +24,9 @@ This Angular application provides a user-friendly interface to simulate the gene
 3. **Install dependencies:**
 
    ```bash
-   cd once-coupon-simulator
+   cd OnceCouponSimulator
    npm install
-   ``` (or `yarn install`)
+   ```
 
 4. **Run the application:**
 
